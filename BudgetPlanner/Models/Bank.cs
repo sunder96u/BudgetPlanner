@@ -15,11 +15,11 @@ namespace BudgetPlanner.Models
         public string Zip { get; set; }
         public string Phone { get; set; }
 
-        public virtual List<Account> Accounts { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
 
         public Bank()
         {
-            Accounts = new List<Account>();
+            Accounts = new HashSet<Account>();
         }
     }
 }

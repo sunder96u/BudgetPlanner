@@ -16,11 +16,11 @@ namespace BudgetPlanner.Models
         public decimal CurrentBalance { get; set; }
 
         public virtual Household Household { get; set; }
-        public virtual List<BudgetItem> BudgetItems { get; set; }
+        public virtual ICollection<BudgetItem> BudgetItems { get; set; }
 
         public Budget()
         {
-            BudgetItems = new List<BudgetItem>();
+            BudgetItems = new HashSet<BudgetItem>();
         }
 }
 }

@@ -22,11 +22,11 @@ namespace BudgetPlanner.Models
         public virtual AccountType AccountType { get; set; }
         public virtual Bank Bank { get; set; }
 
-        public virtual List<Transaction> Transactions { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
 
         public Account()
         {
-            Transactions = new List<Transaction>();
+            Transactions = new HashSet<Transaction>();
         }
     }
 }

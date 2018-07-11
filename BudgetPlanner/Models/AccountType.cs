@@ -11,11 +11,11 @@ namespace BudgetPlanner.Models
         public string Type { get; set; }
         public string Descrtiption { get; set; }
 
-        public List<Account> Accounts { get; set; }
+        public ICollection<Account> Accounts { get; set; }
 
         public AccountType()
         {
-            Accounts = new List<Account>();
+            Accounts = new HashSet<Account>();
         }
 
     }

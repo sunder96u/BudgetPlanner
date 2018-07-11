@@ -3,10 +3,13 @@
 @using Microsoft.AspNet.Identity
 @using BudgetPlanner.Models
 
+@{  var db = new ApplicationDbContext();
+    ApplicationUser user = db.Users.Find(User.Identity.GetUserId());}
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dashboard :: Base Admin</title>
+    <title>Financial Planner</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -43,7 +46,7 @@
                     <span class="sr-only">Toggle navigation</span>
                     <i class="icon-cog"></i>
                 </button>
-                <a class="navbar-brand" href="./index.html">Financial Planner</a>
+                <a class="navbar-brand" href="http://www.badgerbadgerbadger.com">Financial Planner</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -73,8 +76,6 @@
                             }
                             @if (User.Identity.IsAuthenticated)
                             {
-                                var db = new ApplicationDbContext();
-                                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
                                 if (user == null)
                                 {
                                     <span>Hello Guest!</span>
@@ -139,12 +140,56 @@
                 </a>
                 <div class="collapse subnav-collapse">
                     <ul class="mainnav">
-                        <li class="active">
-                            <a href="./index.html">
-                                <i class="icon-home"></i>
-                                <span>Home</span>
-                            </a>
-                        </li>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (user == null)
+                            {
+
+                            }
+                            if (user.HouseholdId == null)
+                            {
+                                <li class="active">
+                                    <a data-toggle="modal" data-target="#CreateHome">
+                                        <i class="icon-home"></i>
+                                            <span>Home</span>
+                                        
+                                    </a>
+                                </li>
+                            }
+                            if (user.HouseholdId != null)
+                            {
+                                <li class="active">
+                                    <a href="~/Home/Index">
+                                        <i class="icon-home"></i>
+                                        <span>Home</span>
+                                    </a>
+                                </li>
+                            }
+
+                        }
+
+                        @if (User.IsInRole("HeadofHousehold") || User.IsInRole("Admin"))
+                        {
+                                <li class="dropdown">
+                                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="icon-beer"></i>
+                                        <span>Home Settings</span>
+                                        <b class="caret"></b>
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li>Send Request</li>
+                                        <li>Delete House</li>
+                                        <li>Remove Someone</li>
+                                    </ul>
+
+                                </li>
+
+                        }
                         <li class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="icon-th"></i>
@@ -261,6 +306,28 @@
             </div> <!-- /row -->
         </div> <!-- /container -->
     </div> <!-- /footer -->
+
+    <!--Modals
+     ================================================= -->
+    <div id="CreateHome" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal Content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" align="center">Home Options</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_CreateHomeModal")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

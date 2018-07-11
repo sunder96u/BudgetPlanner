@@ -104,9 +104,18 @@
                                     </div>
                                     <hr />
                                     <div class="form-group">
-                                        <div class="col-md-offset-4 col-md-8">
-                                            @Html.ActionLink("Change Password", "ChangePassword", "Manage", new { id = Model.Id }, null)
-                                        </div>
+                                        @if (Model.PasswordHash != null)
+                                        {
+                                            <div class="col-md-offset-4 col-md-8">
+                                                @Html.ActionLink("Change Password", "ChangePassword", "Manage", new { id = Model.Id }, null)
+                                            </div>
+                                        }
+                                        @if (Model.PasswordHash == null)
+                                        {
+                                            <div class="col-md-offset-4 col-md-8">
+                                                @Html.ActionLink("Change Password", "SetPassword", "Manage", new { id = Model.Id }, null)
+                                            </div>
+                                        }
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-offset-4 col-md-8">

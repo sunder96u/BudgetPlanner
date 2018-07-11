@@ -11,17 +11,17 @@ namespace BudgetPlanner.Models
         public string Name { get; set; }
          public string Description { get; set; }
 
-        public virtual List<Account> Accounts { get; set; }
-        public virtual List<Budget> Budgets { get; set; }
-        public virtual List<ApplicationUser> Users { get; set; }
-        public virtual List<Invitation> Invitations { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<Budget> Budgets { get; set; }
+        public virtual ICollection<ApplicationUser> Users { get; set; }
+        public virtual ICollection<Invitation> Invitations { get; set; }
 
         public Household()
         {
-            Accounts = new List<Account>();
-            Budgets = new List<Budget>();
-            Users = new List<ApplicationUser>();
-            Invitations = new List<Invitation>();
+            Accounts = new HashSet<Account>();
+            Budgets = new HashSet<Budget>();
+            Users = new HashSet<ApplicationUser>();
+            Invitations = new HashSet<Invitation>();
 
         }
     }

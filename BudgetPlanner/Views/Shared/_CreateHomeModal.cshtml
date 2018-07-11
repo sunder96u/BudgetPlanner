@@ -1,0 +1,19 @@
+﻿@using BudgetPlanner.Models
+
+<div>
+    <h3> You are not currently assigned to a Household.</h3><br />
+    <h5 class="text-center">Would you like to Create a new Household?</h5>
+    <div class="row">
+        <button type="button" id="btn1" class="btn btn-default text-center center" onclick="window.top.location.href='@Url.Action("Create","Households")'">Create new Houshold</button>
+    </div>
+    <br />
+    <p class="text-center">-- or --</p> <br />
+    <h5 class="text-center">Would you like to Join a Current Household?</h5>
+    <div class="row">
+        <button type="button" id="btn2" class="btn btn-default text-center center" onclick="window.top.location.href='@Url.Action("Index","Households")'">Join a Household</button>
+    </div>
+</div>
+
+
+
+
