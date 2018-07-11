@@ -1,0 +1,134 @@
+﻿@model BudgetPlanner.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "MyProfile";
+}
+
+<h2>My Profile</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="widget stacked ">
+            <div class="widget-header">
+                <i class="icon-user"></i>
+                <h3>Your Account</h3>
+            </div> <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#profile" data-toggle="tab">Profile</a>
+                        </li>
+                        <li><a href="#settings" data-toggle="tab">Edit Profile</a></li>
+                    </ul>
+                    <br>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="profile">
+                            <form id="edit-profile" class="form-horizontal col-md-8">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label for="Email" class="col-md-4">Email</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="username" value="@Model.Email" disabled>
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                    <div class="form-group">
+                                        <label for="FirstName" class="col-md-4">First Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="FirstName" value="@Model.FirstName" disabled>
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                    <div class="form-group">
+                                        <label class="col-md-4" for="LastName">Last Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="LastName" value="@Model.LastName" disabled>
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                    <div class="form-group">
+                                        <label class="col-md-4" for="UserName">User Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="UserName" value="@Model.UserName" disabled>
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                    <div class="form-group">
+                                        <label class="col-md-4" for="PhoneNumber">Phone Number</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="PhoneNumber" value="@Model.PhoneNumber" disabled>
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                </fieldset>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="settings">
+                            @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "form-horizontal col-md-8", role = "form", id = "edit-profile2" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.Id)
+                                @Html.HiddenFor(model => model.Email)
+                                <fieldset>
+                                    @Html.ValidationSummary("", new { @class = "text-danger"})
+                                    <div class="form-group">
+                                        <label for="Email" class="col-md-4">Email</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="Email" name="Email" value="@Model.Email" placeholder="=@Model.Email" disabled>
+                                            <p class="help-block">Your Email is for logging in and cannot be changed.</p>
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                    <div class="form-group">
+                                        <label for="FirstName" class="col-md-4">First Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" placeholder="@Model.FirstName">
+                                            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger"})
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                    <div class="form-group">
+                                        <label class="col-md-4" for="LastName">Last Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" placeholder="@Model.LastName">
+                                            @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                    <div class="form-group">
+                                        <label class="col-md-4" for="DisplayName">Display Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="DisplayName" name="DisplayName" value="@Model.DisplayName" placeholder="@Model.DisplayName">
+                                            @Html.ValidationMessageFor(m => m.DisplayName, "", new { @class = "text-danger" })
+                                        </div> <!-- /controls -->
+                                    </div> <!-- /control-group -->
+                                    <div class="form-group">
+                                        <label class="col-md-4" for="PhoneNumber">Phone Number</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" placeholder="@Model.PhoneNumber">
+                                            <p class="help-block">Your Phone Number is used for 2 Factor Authenitification, if you choose to use it.</p>
+                                        </div> <!-- /controls -->
+                                    </div>
+                                    <hr />
+                                    <div class="form-group">
+                                        <div class="col-md-offset-4 col-md-8">
+                                            @Html.ActionLink("Change Password", "ChangePassword", "Manage", new { id = Model.Id }, null)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-4 col-md-8">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <button class="btn btn-default">Cancel</button>
+                                        </div>
+                                    </div> <!-- /form-actions -->
+                                    <!-- /control-group -->
+                                </fieldset>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /widget-content -->
+        </div> <!-- /widget -->
+    </div> <!-- /span8 -->
+
+    <div class="col-md-4">
+        <div class="well">
+            <h4>Household Information:</h4>
+            <p>This area will list the house hold name, </p>
+            <p> and then create a list of all users in the house hold with links to their profiles</p>
+        </div>
+    </div> <!-- /span4 -->
+</div> <!-- /row -->

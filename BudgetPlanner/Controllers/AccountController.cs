@@ -17,6 +17,7 @@ namespace BudgetPlanner.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -50,6 +51,14 @@ namespace BudgetPlanner.Controllers
             {
                 _userManager = value;
             }
+        }
+        
+        [Authorize]
+        public ActionResult MyProfile()
+        {
+            var userId = User.Identity.GetUserId();
+
+            return View(db.Users.Find(userId));
         }
 
         //

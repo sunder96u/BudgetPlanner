@@ -91,7 +91,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                         <ul class="dropdown-menu">
-                            <li><a href="javascript:;">My Profile</a></li>
+                            <li><a href=@Url.Action("MyProfile","Account",null)>My Profile</a></li>
                             <li><a href="javascript:;">My Groups</a></li>
                             <li class="divider"></li>
                             <li>

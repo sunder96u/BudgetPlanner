@@ -72,7 +72,6 @@
                         @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                     </div> <!-- /field -->
                     <div class="field">
-
                         <label for="password">Password:</label>
                         <input type="password" id="password" name="password" value="" placeholder="Password" class="form-control input-lg password-field" />
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
@@ -87,6 +86,7 @@
                     <input type="submit" value="Log in" class="login-action btn btn-primary" />
                 </div> <!-- .actions -->
             }
+        <br/>
             <div class="col-md-12">
                 <p>Sign in using social media:</p>
                 <section id="socialLoginForm">
