@@ -1,0 +1,162 @@
+﻿@model BudgetPlanner.ViewModels.DashboardViewModel
+@using Microsoft.AspNet.Identity
+@using BudgetPlanner.Models
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="CircleBudgetData">Budget Data will load here</div>
+        </div>
+        <div class="col-md-6">
+            @Html.Action("HouseMembers", "Home")
+        </div>
+    </div>
+    <div class="row">
+        <div id="AllBudgetData">Budget Data will load here</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget stacked">
+                <div class="widget-header">
+                    <i class="icon-th-large"></i>
+                    <h3>All Transaction History</h3>
+                </div> <!-- /widget-header -->
+                <div class="widget-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Account Name")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Memo")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Budget Class")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Amount")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Current Balance")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Input Date")
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ ApplicationDbContext db = new ApplicationDbContext();
+                                    var userId = User.Identity.GetUserId();
+                                    var user = db.Users.FirstOrDefault(i => i.Id == userId); }
+                                @foreach (var item in Model.Transactions.Take(10))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Account.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Memo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Type)
+                                        </td>
+                                        <td>
+                                            @if (item.Type == "Income")
+                                            {
+                                                <p>+ @item.Amount</p>
+                                            }
+                                            @if (item.Type != "Income")
+                                            {
+                                                <p>- @item.Amount</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Account.CurrentBalance)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Created)
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger identityclass" data-target="#Edit" data-toggle="modal" data-id="@item.Id">Reconcile</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="Edit" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        Modal Content
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Reconcile Transaction</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Action("ReconcileFunds", "Home")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+    $(function () {
+        $(".identityclass").click(function () {
+            var idVal = $(this).data('id');
+            $(".modal-body #hiddenValue").val(idVal);
+        })
+    });
+
+    var url = '@Url.Action("BudgetData", "Dashboard")'
+    $.post(url).then(function (response) {
+        FusionCharts.ready(function () {
+            var revenueChart = new FusionCharts({
+                type: 'doughnut2d',
+                renderAt: 'CircleBudgetData',
+                width: '550',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": {
+                        "caption": "Budget",
+                        "subCaption": "by Catagory",
+                        "use3dLighting": "1",
+                        "enableSmartLabels": "1",
+                        "startingAngle": "180",
+                        "showLabels": "1",
+                        "showLegend": "1",
+                        "centerLabelBold": "1",
+                        "showToolTip": "1",
+                        "useDataPlotColorForLabels": "1",
+                        "theme": "fint"
+                    },
+                    "data": response.data
+                }
+            });
+            revenueChart.render();
+        });
+    });
+
+    </script>
+}

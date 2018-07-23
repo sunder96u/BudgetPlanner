@@ -37,7 +37,7 @@ namespace BudgetPlanner
                 Credentials = new NetworkCredential(GmailUsername, GmailPassword)
             })
 
-            using (var email = new MailMessage("Bug Tracker<sunder96u@gmail.com>", message.Destination)
+            using (var email = new MailMessage("Financial Planner<Awesomesauce@Mailinator.com>", message.Destination)
             {
                 Subject = message.Subject,
                 IsBodyHtml = true,

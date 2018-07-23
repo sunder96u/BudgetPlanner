@@ -11,6 +11,9 @@ namespace BudgetPlanner.Models
         public int BudgetId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public decimal SpendingTarget { get; set; }
+        public decimal CurrentSpending { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual Budget Budget { get; set; }
     }

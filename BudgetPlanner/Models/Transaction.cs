@@ -10,12 +10,13 @@ namespace BudgetPlanner.Models
         public int Id { get; set; }
         public int AccountId { get; set; }
         public decimal Amount { get; set; }
-        public string Title { get; set; }
+        public string Type { get; set; }
         public string Memo { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
         public bool Reconciled { get; set; }
 
         public virtual Account Account { get; set; }
+
     }
 }

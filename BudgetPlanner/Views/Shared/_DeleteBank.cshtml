@@ -1,0 +1,25 @@
+﻿@*@model BudgetPlanner.ViewModels.DeleteBank*@
+
+<div>
+    @using (Html.BeginForm("Delete", "Banks", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" id="hiddenValue" value="" class="form-control" />
+        <div class="form-horizontal">
+            <h4>Leave</h4>
+            <p>Are you sure you would like to delete this Bank?</p>
+            <hr />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="submit" value="Yes" class="btn btn-success center" />
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-danger center" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+

@@ -703,13 +703,13 @@
             return c;
         }
 
-        function getCanvasDimensions() {
-            canvasWidth = placeholder.width();
-            canvasHeight = placeholder.height();
+        //function getCanvasDimensions() {
+        //    canvasWidth = placeholder.width();
+        //    canvasHeight = placeholder.height();
             
-            if (canvasWidth <= 0 || canvasHeight <= 0)
-                throw "Invalid dimensions for plot, width = " + canvasWidth + ", height = " + canvasHeight;
-        }
+        //    if (canvasWidth <= 0 || canvasHeight <= 0)
+        //        throw "Invalid dimensions for plot, width = " + canvasWidth + ", height = " + canvasHeight;
+        //}
 
         function resizeCanvas(c) {
             // resizing should reset the state (excanvas seems to be
@@ -744,7 +744,7 @@
                 if (placeholder.css("position") == 'static')
                     placeholder.css("position", "relative"); // for positioning labels and overlay
 
-                getCanvasDimensions();
+                //getCanvasDimensions();
                 
                 canvas = makeCanvas(true, "base");
                 overlay = makeCanvas(false, "overlay"); // overlay canvas for interactive features

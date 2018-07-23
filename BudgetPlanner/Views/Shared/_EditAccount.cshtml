@@ -1,0 +1,50 @@
+﻿@model BudgetPlanner.ViewModels.AccountEditViewModel
+
+
+<div>
+    @using (Html.BeginForm("Edit", "Accounts", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" id="hiddenValue" value="" class="form-control" />
+        <div class="form-horizontal">
+            <h4>Add Account</h4>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="field">
+                <label for="Name">Account Name Name:</label>
+                <input type="text" id="Name" name="Name" value="" placeholder="Account Name" class="form-control" />
+                @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="BankId">Bank:</label>
+                <div class="field">@Html.DropDownList("Banks", null, new { @class = "form-control" })</div>
+                @Html.ValidationMessage("Banks", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="TypeId"> Account Type:</label>
+                <div class="field">@Html.DropDownList("AccountType", null, new { @class = "form-control" })</div>
+                @Html.ValidationMessage("Type", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="Desciption">Description:</label>
+                <input type="text" id="Description" name="Description" value="" placeholder="Description" class="form-control" />
+                @Html.ValidationMessage("Description", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="AccountNumber">Account Number:</label>
+                <input type="text" id="AccountNumber" name="AccountNumber" value="" placeholder="Account Number" class="form-control" />
+                @Html.ValidationMessage("AccountNumber", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="RoutingNumber">Routing Number:</label>
+                <input type="text" id="RoutingNumber" name="RoutingNumber" value="" placeholder="Account Routing Number" class="form-control" />
+                @Html.ValidationMessage("RoutingNumber", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="StartingBalance">Starting Balance:</label>
+                <input type="Number" id="StartingBalance" name="StartingBalance" value="" placeholder="Account Starting Balance" class="form-control" />
+                @Html.ValidationMessage("StartingBalance", "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,132 @@
+﻿@model IEnumerable<BudgetPlanner.Models.Transaction>
+    @using BudgetPlanner.Models
+@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .ui-widget-header {
+        border: 1px solid #000000;
+        background: #808080 50% 50% repeat-x;
+    }
+
+        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+            border: 1px solid #ccc;
+            background: #f6f6f6 50% 50% repeat-x;
+            font-weight: bold;
+            color: #000000;
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget stacked">
+                <div class="widget-header">
+                    <i class="icon-th-large"></i>
+                    <h3>All Transaction History</h3>
+                </div> <!-- /widget-header -->
+                <div class="widget-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Account Name")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Memo")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Budget Class")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Amount")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Current Balance")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Input Date")
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ ApplicationDbContext db = new ApplicationDbContext();
+                                    var userId = User.Identity.GetUserId();
+                                    var user = db.Users.FirstOrDefault(i => i.Id == userId); }
+                                @foreach (var item in Model.Where(i => i.Account.Bank.HouseholdId == user.HouseholdId))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Account.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Memo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Type)
+                                        </td>
+                                        <td>
+                                            @if (item.Type == "Income")
+                                            {
+                                                <p>+ @item.Amount</p>
+                                            }
+                                            @if (item.Type != "Income")
+                                            {
+                                                <p>- @item.Amount</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Account.CurrentBalance)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Created)
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger identityclass" data-target="#Edit" data-toggle="modal" data-id="@item.Id">Reconcile</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="Edit" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        Modal Content
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Reconcile Transaction</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Action("ReconcileFunds", "Home")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+    $(function () {
+        $(".identityclass").click(function () {
+            var idVal = $(this).data('id');
+            $(".modal-body #hiddenValue").val(idVal);
+        })
+    });
+    </script>
+}

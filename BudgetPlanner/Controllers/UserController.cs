@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BudgetPlanner.Action_Filters;
 
 namespace BudgetPlanner.Controllers
 {
     [Authorize]
+    [RequireHttps]
+    [CustomAuthorization]
     public class UserController : Controller
     {
         private ApplicationDbContext Db = new ApplicationDbContext();

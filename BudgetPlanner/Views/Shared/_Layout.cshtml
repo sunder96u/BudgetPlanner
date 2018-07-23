@@ -2,8 +2,9 @@
 
 @using Microsoft.AspNet.Identity
 @using BudgetPlanner.Models
+@using BudgetPlanner.ViewModels
 
-@{  var db = new ApplicationDbContext();
+@{ var db = new ApplicationDbContext();
     ApplicationUser user = db.Users.Find(User.Identity.GetUserId());}
 
 <html lang="en">
@@ -13,25 +14,32 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-
     <link href="~/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/css/bootstrap-responsive.min.css" rel="stylesheet">
-
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
     <link href="~/css/font-awesome.min.css" rel="stylesheet">
-
     <link href="~/css/ui-lightness/jquery-ui-1.10.0.custom.min.css" rel="stylesheet">
-
     <link href="~/css/base-admin-3.css" rel="stylesheet">
     <link href="~/css/base-admin-3-responsive.css" rel="stylesheet">
-
-    <link href="~/css/pages/dashboard.css" rel="stylesheet">
-
+    <link href="~/css/pages/plans.css" rel="stylesheet">
+    <link href="~/css/pages/pricing.css" rel="stylesheet">
     <link href="~/css/custom.css" rel="stylesheet">
+    <link href="~/fontawesome-free-5.1.0-web/css/all.css" rel="stylesheet">
+    <link href="~/fontawesome-free-5.1.0-web/css/brands.css" rel="stylesheet">
+    <link href="~/fontawesome-free-5.1.0-web/css/fontawesome.css" rel="stylesheet">
+    <link href="~/fontawesome-free-5.1.0-web/css/regular.css" rel="stylesheet">
+    <link href="~/fontawesome-free-5.1.0-web/css/solid.css" rel="stylesheet">
+    <link href="~/fontawesome-free-5.1.0-web/css/svg-with-js.css" rel="stylesheet">
+    <link href="~/fontawesome-free-5.1.0-web/css/v4-shims.css" rel="stylesheet">
+    <link href="~/fontawesome-free-5.1.0-web/css/v4-shims.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.css" />
+    <link rel="shortcut icon" href="~/img/ms-icon-310x310.png" type="image/x-icon">
+    <link rel="icon" href="~/img/ms-icon-310x310.png" type="image/x-icon">
+
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
 </head>
@@ -46,27 +54,11 @@
                     <span class="sr-only">Toggle navigation</span>
                     <i class="icon-cog"></i>
                 </button>
-                <a class="navbar-brand" href="http://www.badgerbadgerbadger.com">Financial Planner</a>
+                <a class="navbar-brand" href="https://www.badgerbadgerbadger.com">Financial Planner</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="javscript:;" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-cog"></i>
-                            Settings
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                            <li><a href="./account.html">Account Settings</a></li>
-                            <li><a href="javascript:;">Privacy Settings</a></li>
-                            <li class="divider"></li>
-                            }
-                            <li><a href="javascript:;">Help</a></li>
-                        </ul>
-                    </li>
                     <li class="dropdown">
                         <a href="javscript:;" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="icon-user"></i>
@@ -91,22 +83,21 @@
                         </a>
                         @if (User.Identity.IsAuthenticated)
                         {
-                        <ul class="dropdown-menu">
-                            <li><a href=@Url.Action("MyProfile","Account",null)>My Profile</a></li>
-                            <li><a href="javascript:;">My Groups</a></li>
-                            <li class="divider"></li>
-                            <li>
-                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
-                                {
-                                    @Html.AntiForgeryToken()
-                                <div class="col-md-offset-3">
-                                    <input type="submit" value="Log Out" class="btn btn-small btn-danger"/>
-                                </div>
-                                    @*<a href="javascript:;">Logout</a>*@
-                                }
+                            <ul class="dropdown-menu">
+                                <li><a href=@Url.Action("MyProfile","Account",null)>My Profile</a></li>
+                                <li class="divider"></li>
+                                <li>
+                                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <div class="col-md-offset-3">
+                                            <input type="submit" value="Log Out" class="btn btn-small btn-danger" />
+                                        </div>
+                                        @*<a href="javascript:;">Logout</a>*@
+                                    }
 
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
                         }
                         @if (!User.Identity.IsAuthenticated)
                         {
@@ -114,11 +105,11 @@
                                 @*<li><a href="~/Account/login">Login</a></li>*@
                                 <li>
                                     <div class="col-md-offset-3">
-                                        <input type="button" class="btn btn-small btn-success" value="Log In" onclick="location.href='@Url.Action("Login","Account")'"/>
+                                        <input type="button" class="btn btn-small btn-success" value="Log In" onclick="location.href='@Url.Action("Login","Account")'" />
                                     </div>
                                 </li>
                             </ul>
-                            
+
                         }
                     </li>
                 </ul>
@@ -154,90 +145,68 @@
                             {
                                 <li class="active">
                                     <a data-toggle="modal" data-target="#CreateHome">
-                                        <i class="icon-home"></i>
-                                            <span>Home</span>
-                                        
+                                        <i class="fa fa-fw fa-3x fa-home" style="margin-top:.25em"></i>
+                                        <span>Home</span>
+
                                     </a>
                                 </li>
                             }
                             if (user.HouseholdId != null)
                             {
                                 <li class="active">
-                                    <a href="~/Home/Index">
-                                        <i class="icon-home"></i>
+                                    <a href="~/Dashboard/Index">
+                                        <i class="fa fa-fw fa-3x fa-home" style="margin-top:.25em"></i>
                                         <span>Home</span>
                                     </a>
                                 </li>
+                                <li class="active">
+                                    <a href="~/banks/Index">
+                                        <i class="fa fa-fw fa-3x fa-university" style="margin-top:.25em"></i>
+                                        <span>View Banks</span>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="~/Accounts/Index">
+                                        <i class="fa fa-fw fa-3x fa-money-check-alt" style="margin-top:.25em"></i>
+                                        <span>View Accounts</span>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="~/BudgetViewModel/Index">
+                                        <i class="fa fa-fw fa-3x fa-money-bill-alt" style="margin-top:.25em"></i>
+                                        <span>View Budgets</span>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="~/Transactions/Index">
+                                        <i class="fa fa-fw fa-3x fa-piggy-bank" style="margin-top:.25em"></i>
+                                        <span>View Transactions</span>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a data-toggle="modal" data-target="#AddTransaction">
+                                        <i class="fa fa-fw fa-3x fa-coins" style="margin-top:.25em"></i>
+                                        <span>Add Transaction</span>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a data-toggle="modal" data-target="#Leave">
+                                        <i class="fa fa-fw fa-3x fa-times-circle" style="margin-top:.25em"></i>
+                                        <span>Leave Household</span>
+                                    </a>
+                                </li>
+                                if (User.IsInRole("HeadofHousehold"))
+                                {
+                                    <li class="active">
+                                        <a data-toggle="modal" data-target="#Invite">
+                                            <i class="fa fa-fw fa-3x fa-user-ninja" style="margin-top:.25em"></i>
+                                            <span>Invite Members</span>
+                                        </a>
+                                    </li>
+                                }
                             }
 
                         }
-
-                        @if (User.IsInRole("HeadofHousehold") || User.IsInRole("Admin"))
-                        {
-                                <li class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="icon-beer"></i>
-                                        <span>Home Settings</span>
-                                        <b class="caret"></b>
-                                    </a>
-
-                                    <ul class="dropdown-menu">
-                                        <li>Send Request</li>
-                                        <li>Delete House</li>
-                                        <li>Remove Someone</li>
-                                    </ul>
-
-                                </li>
-
-                        }
-                        <li class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="icon-th"></i>
-                                <span>Components</span>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="./elements.html">Elements</a></li>
-                                <li><a href="./forms.html">Form Styles</a></li>
-                                <li><a href="./jqueryui.html">jQuery UI</a></li>
-                                <li><a href="./charts.html">Charts</a></li>
-                                <li><a href="./popups.html">Popups/Notifications</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="icon-copy"></i>
-                                <span>Sample Pages</span>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="./pricing.html">Pricing Plans</a></li>
-                                <li><a href="./faq.html">FAQ's</a></li>
-                                <li><a href="./gallery.html">Gallery</a></li>
-                                <li><a href="./reports.html">Reports</a></li>
-                                <li><a href="./account.html">User Account</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="icon-external-link"></i>
-                                <span>Extra Pages</span>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="./login.html">Login</a></li>
-                                <li><a href="./signup.html">Signup</a></li>
-                                <li><a href="./error.html">Error</a></li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="#">More options</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a tabindex="-1" href="#">Second level</a></li>
-                                        <li><a href="#">Second level</a></li>
-                                        <li><a href="#">Second level</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
                     </ul>
                 </div> <!-- /.subnav-collapse -->
             </div> <!-- /container -->
@@ -251,62 +220,18 @@
         </div> <!-- /container -->
     </div> <!-- /main -->
 
-    <div class="extra">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <h4>About</h4>
-                    <ul>
-                        <li><a href="javascript:;">About Us</a></li>
-                        <li><a href="javascript:;">Twitter</a></li>
-                        <li><a href="javascript:;">Facebook</a></li>
-                        <li><a href="javascript:;">Google+</a></li>
-                    </ul>
-                </div> <!-- /span3 -->
-                <div class="col-md-3">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="javascript:;">Frequently Asked Questions</a></li>
-                        <li><a href="javascript:;">Ask a Question</a></li>
-                        <li><a href="javascript:;">Video Tutorial</a></li>
-                        <li><a href="javascript:;">Feedback</a></li>
-                    </ul>
-                </div> <!-- /span3 -->
-                <div class="col-md-3">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="javascript:;">License</a></li>
-                        <li><a href="javascript:;">Terms of Use</a></li>
-                        <li><a href="javascript:;">Privacy Policy</a></li>
-                        <li><a href="javascript:;">Security</a></li>
-                    </ul>
-                </div> <!-- /span3 -->
-                <div class="col-md-3">
-                    <h4>Settings</h4>
-                    <ul>
-                        <li><a href="javascript:;">Consectetur adipisicing</a></li>
-                        <li><a href="javascript:;">Eiusmod tempor </a></li>
-                        <li><a href="javascript:;">Fugiat nulla pariatur</a></li>
-                        <li><a href="javascript:;">Officia deserunt</a></li>
-                    </ul>
-                </div> <!-- /span3 -->
-            </div> <!-- /row -->
-        </div> <!-- /container -->
-    </div> <!-- /extra -->
-
     <div class="footer">
         <div class="container">
             <div class="row">
                 <div id="footer-copyright" class="col-md-6">
-                    &copy; 2012-13 Jumpstart UI.
+                    2018 Steven Underwood
                 </div> <!-- /span6 -->
                 <div id="footer-terms" class="col-md-6">
-                    Theme by <a href="http://jumpstartui.com" target="_blank">Jumpstart UI</a>
+                    <a>Financial Planner</a>
                 </div> <!-- /.span6 -->
             </div> <!-- /row -->
         </div> <!-- /container -->
     </div> <!-- /footer -->
-
     <!--Modals
      ================================================= -->
     <div id="CreateHome" class="modal fade" role="dialog">
@@ -326,6 +251,57 @@
             </div>
         </div>
     </div>
+    <div id="Invite" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal Content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" align="center">Invite User</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Action("InviteModal", "Home")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="Leave" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal Content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" align="center">Leave Household</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Action("LeavehouseModal", "Home")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="AddTransaction" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal Content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" align="center">Add Transaction</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Action("AddTransaction", "Home")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Le javascript
@@ -334,15 +310,32 @@
     <script src="~/js/libs/jquery-1.9.1.min.js"></script>
     <script src="~/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
     <script src="~/js/libs/bootstrap.min.js"></script>
-
-    <script src="~/js/plugins/flot/jquery.flot.js"></script>
-    <script src="~/js/plugins/flot/jquery.flot.pie.js"></script>
-    <script src="~/js/plugins/flot/jquery.flot.resize.js"></script>
-
+    @*<script src="~/js/plugins/flot/jquery.flot.js"></script>
+        <script src="~/js/plugins/flot/jquery.flot.pie.js"></script>
+        <script src="~/js/plugins/flot/jquery.flot.resize.js"></script>*@
     <script src="~/js/Application.js"></script>
+    @*<script src="~/js/charts/area.js"></script>
+        <script src="~/js/charts/donut.js"></script>*@
+    <script src="~/fontawesome-free-5.1.0-web/js/all.js"></script>
+    <script scr="~/fontawesome-free-5.1.0-web/js/brands.js"></script>
+    <script scr="~/fontawesome-free-5.1.0-web/js/fontawesome.js"></script>
+    <script scr="~/fontawesome-free-5.1.0-web/js/regular.js"></script>
+    <script scr="~/fontawesome-free-5.1.0-web/js/solid.js"></script>
+    <script scr="~/fontawesome-free-5.1.0-web/js/v4-shims.js"></script>
+    <script src="~/Scripts/Custom.js"></script>
+    <script src="~/FusionChartsFree/JSClass/FusionCharts.js"></script>
 
-    <script src="~/js/charts/area.js"></script>
-    <script src="~/js/charts/donut.js"></script>
+
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/ju/dt-1.10.18/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+
+
 
     @RenderSection("Scripts", required: false)
 

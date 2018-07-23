@@ -1,0 +1,197 @@
+﻿@model BudgetPlanner.ViewModels.BudgetViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <p>
+        @Html.ActionLink("Create New Item", "Create", "BudgetItems", null)
+    </p>*@
+@if (Model.Name == "foo" || Model.Name == null)
+{
+    <button type="button" class="btn btn-lg btn-success" data-toggle="modal" data-target="#AddBudget">Add Budget</button>
+}
+@if (Model.Name != "foo")
+{
+    <button type="button" class="btn btn-lg btn-success" data-toggle="modal" data-target="#AddBudgetItem">Add Budget Catagory</button>
+    <button type="button" class="btn btn-lg btn-warning pull-right" data-toggle="modal" data-target="#EditBudget">Edit Budget</button>
+}
+<br />
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget stacked">
+                <div class="widget-header">
+                    <i class="icon-th-large"></i>
+                    <h3>Your Budget</h3>
+                </div> <!-- /widget-header -->
+                <div class="widget-content">
+                    <div class="pricing-plans plans-1">
+                        <div class="plan-container">
+                            <div class="plan stacked">
+                                <div class="plan-header">
+                                    <div class="plan-title">
+                                        <h1>Total Budget</h1>
+                                    </div>
+                                    @if (Model.CurrentBalance < Model.SpendingTarget)
+                                    {
+                                        <div class="plan-price" style="background-color:green;">
+                                            <h1>Spent @Model.CurrentBalance.ToString("C2") of @Model.SpendingTarget.ToString("C2") </h1>
+                                        </div>
+                                    }
+                                    @if (Model.CurrentBalance >= Model.SpendingTarget)
+                                    {
+                                        <div class="plan-price" style="background-color:red;">
+                                            <h1>Spent @Model.CurrentBalance.ToString("C2") of @Model.SpendingTarget.ToString("C2") </h1>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <hr />
+                    <hr />
+                    <br />
+                    @foreach (var catagory in Model.BudgetItems)
+                    {
+                        <div class="pricing-plans plans-4">
+                            <div class="plan-container notouch">
+                                <div class="plan stacked">
+                                    <div class="plan-header">
+                                        <div class="plan-title">
+                                            <h3>@catagory.Name</h3>
+                                        </div> <!-- /plan-title -->
+                                        <div class="plan-price" style="background-color:green;">
+                                            <h1>@catagory.SpendingTarget.ToString("C2")</h1>
+                                            <!-- /plan-price -->
+                                            <span class="term">Spending Goal</span>
+                                        </div> <!-- /plan-header -->
+                                    </div>
+                                    <div class="plan-features bigger">
+                                        <ul>
+                                            <li><strong>Description:</strong></li>
+                                            <li>@catagory.Description</li>
+                                        </ul>
+
+                                    </div> <!-- /plan-actions -->
+                                    <div class="plan-actions">
+                                            <a class="btn btn-warning identityclass" data-target="#Edit" data-toggle="modal" data-id="@catagory.Id">Edit</a>
+                                            <a class="btn btn-danger identityclass" data-target="#Delete" data-toggle="modal" data-id="@catagory.Id">Delete</a>
+                                    </div> <!-- /plan-features -->
+                                </div> <!-- /plan -->
+                            </div> <!-- /plan-container -->
+                        </div> <!-- /pricing-plans -->
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="AddBudget" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Create Budget</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_AddBudget")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="AddBudgetItem" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Create Budget Item</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_AddBudgetItem")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="Edit" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Edit Budget Item</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_EditBudgetItem")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="Delete" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Delete Budget Item</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_DeleteBudgetItem")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="EditBudget" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Edit Budget</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_EditBudget")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+    $(function () {
+        $(".identityclass").click(function () {
+            var idVal = $(this).data('id');
+            $(".modal-body #hiddenValue").val(idVal);
+        })
+    });
+    </script>
+}
+

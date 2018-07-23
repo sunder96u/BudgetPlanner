@@ -14,12 +14,14 @@
     <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/font-awesome.min.css" rel="stylesheet">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
     <link href="~/css/ui-lightness/jquery-ui-1.10.0.custom.min.css" rel="stylesheet">
     <link href="~/css/base-admin-3.css" rel="stylesheet">
     <link href="~/css/base-admin-3-responsive.css" rel="stylesheet">
     <link href="~/css/pages/signin.css" rel="stylesheet">
     <link href="~/css/custom.css" rel="stylesheet">
+    <link rel="shortcut icon" href="~/img/ms-icon-310x310.png" type="image/x-icon">
+    <link rel="icon" href="~/img/ms-icon-310x310.png" type="image/x-icon">
 </head>
 
 <body>
@@ -68,30 +70,30 @@
                 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
-                    <div class="login-fields">
-                        <p>Create your free account:</p>
-                        @Html.ValidationSummary("", new { @class = "text-danger" })
-                        <div class="field">
-                            <label for="FirstName">First Name:</label>
-                            <input type="text" id="FirstName" name="FirstName" value="" placeholder="First Name" class="form-control" />
-                        </div> <!-- /field -->
-                        <div class="field">
-                            <label for="LastName">Last Name:</label>
-                            <input type="text" id="LastName" name="LastName" value="" placeholder="Last Name" class="form-control" />
-                        </div> <!-- /field -->
-                        <div class="field">
-                            <label for="Email">Email Address:</label>
-                            <input type="text" id="Email" name="Email" value="" placeholder="Email" class="form-control" />
-                        </div> <!-- /field -->
-                        <div class="field">
-                            <label for="Password">Password:</label>
-                            <input type="password" id="Password" name="Password" value="" placeholder="Password" class="form-control" />
-                        </div> <!-- /field -->
-                        <div class="field">
-                            <label for="ConfirmPassword">Confirm Password:</label>
-                            <input type="password" id="ConfirmPassword" name="ConfirmPassword" value="" placeholder="Confirm Password" class="form-control" />
-                        </div> <!-- /field -->
-                    </div> <!-- /login-fields -->
+                <div class="login-fields">
+                    <p>Create your free account:</p>
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <div class="field">
+                        <label for="FirstName">First Name:</label>
+                        <input type="text" id="FirstName" name="FirstName" value="" placeholder="First Name" class="form-control" />
+                    </div> <!-- /field -->
+                    <div class="field">
+                        <label for="LastName">Last Name:</label>
+                        <input type="text" id="LastName" name="LastName" value="" placeholder="Last Name" class="form-control" />
+                    </div> <!-- /field -->
+                    <div class="field">
+                        <label for="Email">Email Address:</label>
+                        <input type="text" id="Email" name="Email" value="" placeholder="Email" class="form-control" />
+                    </div> <!-- /field -->
+                    <div class="field">
+                        <label for="Password">Password:</label>
+                        <input type="password" id="Password" name="Password" value="" placeholder="Password" class="form-control" />
+                    </div> <!-- /field -->
+                    <div class="field">
+                        <label for="ConfirmPassword">Confirm Password:</label>
+                        <input type="password" id="ConfirmPassword" name="ConfirmPassword" value="" placeholder="Confirm Password" class="form-control" />
+                    </div> <!-- /field -->
+                </div> <!-- /login-fields -->
                     <div class="login-actions">
                         <span class="login-checkbox">
                             <input id="Field" name="Field" type="checkbox" class="field login-checkbox" value="First Choice" tabindex="4" />

@@ -1,0 +1,175 @@
+﻿@model IEnumerable<BudgetPlanner.Models.Account>
+@using BudgetPlanner.Models
+@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "Index";
+}
+<link href="~/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
+<link href="~/css/font-awesome.min.css" rel="stylesheet">
+<link href="~/css/ui-lightness/jquery-ui-1.10.0.custom.min.css" rel="stylesheet">
+<link href="~/css/base-admin-3.css" rel="stylesheet">
+<link href="~/css/base-admin-3-responsive.css" rel="stylesheet">
+<link href="~/css/pages/plans.css" rel="stylesheet">
+<link href="~/css/pages/pricing.css" rel="stylesheet">
+<link href="~/css/custom.css" rel="stylesheet">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<button type="button" class="pull-right btn btn-lg btn-danger" data-toggle="modal" data-target="#AddAccount">Create Account</button>
+<br />
+<br />
+<br />
+<div class="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget stacked">
+
+                    <div class="widget-header">
+                        <i class="icon-th-large"></i>
+                        <h3>Your House Accounts</h3>
+                    </div> <!-- /widget-header -->
+                
+                    <div class="widget-content">
+                    @{ ApplicationDbContext db = new ApplicationDbContext();
+                        var userId = User.Identity.GetUserId();
+                        var user = db.Users.FirstOrDefault(i => i.Id == userId); }
+                        @foreach (var account in Model.Where(i => i.Bank.HouseholdId == user.HouseholdId))
+                        {
+                            <div class="pricing-plans plans-4">
+                                <div class="plan-container">
+                                    <div class="plan stacked">
+                                        <div class="plan-header">
+                                            <div class="plan-title">
+                                                @account.Name
+                                            </div> <!-- /plan-title -->
+
+                                            @if (account.CurrentBalance > 0)
+                                            {
+                                                <div class="plan-price" style="background-color:green;">
+                                                    <h1>@account.CurrentBalance.ToString("C2")</h1>
+                                                    <!-- /plan-price -->
+                                                    <span class="term">Left in Account</span>
+                                                </div> <!-- /plan-header -->
+                                            }
+                                            @if (account.CurrentBalance <= 0)
+                                            {
+                                                <div class="plan-price" style="background-color:darkred;">
+                                                    <h1>- @account.CurrentBalance.ToString("C2")</h1>
+                                                    <!-- /plan-price -->
+                                                    <span class="term">Left in Account</span>
+                                                </div> <!-- /plan-header -->
+                                            }
+                                        </div>
+                                        <div class="plan-features">
+                                            <ul>
+                                                <li><strong>Bank:</strong>&nbsp; @account.Bank.Name</li>
+                                                <li><strong>Type:</strong>&nbsp; @account.AccountType.Type</li>
+                                                <li>
+                                                    <strong>Routing Number:</strong>&nbsp;
+                                                    <button class="ui-popover" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="@account.RoutingNumber" title="" data-original-title="Your Routing Number:" style="border:none;color:blue;background-color:rgba(0,0,0,0);">Hidden For Your Safety</button>
+                                                </li>
+                                                <li>
+                                                    <strong>Account Number:</strong>&nbsp;
+                                                    <button class="ui-popover" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="@account.AccountNumber" title="" data-original-title="Your Account Number:" style="border:none;color:blue;background-color:rgba(0,0,0,0);">Hidden For Your Safety</button>
+                                                </li>
+                                            </ul>
+                                        </div> <!-- /plan-features -->
+                                        <div class="plan-actions">
+                                            <a href="@Url.Action("Details","Accounts",new { id = account.Id },null)" class="btn btn-default">Transactions</a>
+                                            <a class="btn btn-warning identityclass" data-target="#Edit" data-toggle="modal" data-id="@account.Id">Edit</a>
+                                            <a class="btn btn-danger identityclass" data-target="#Delete" data-toggle="modal" data-id="@account.Id">Delete</a>
+                                        </div> <!-- /plan-actions -->
+                                    </div> <!-- /plan -->
+                                </div> <!-- /plan-container -->
+                            </div> <!-- /pricing-plans -->
+                        }
+                        <div class="clear"></div>
+
+                    </div> <!-- /widget-content -->
+
+                </div> <!-- /widget -->
+            </div> <!-- /row -->
+        </div> <!-- /container -->
+    </div>
+</div>
+<div id="AddAccount" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Create Account</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Action("AddAccount", "Home")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="Edit" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Edit Account</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Action("EditAccount", "Home")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="Delete" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" align="center">Delete Account</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_DeleteAccount")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="~/js/libs/jquery-1.9.1.min.js"></script>
+<script src="~/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
+<script src="~/js/libs/bootstrap.min.js"></script>
+
+<script src="~/js/Application.js"></script>
+
+@section scripts
+{
+    <script>
+        $(function () {
+            $(".identityclass").click(function () {
+                var idVal = $(this).data('id');
+                $(".modal-body #hiddenValue").val(idVal);
+            })
+        });
+    </script>
+}

@@ -9,15 +9,19 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BudgetPlanner.Models;
+using BudgetPlanner.Helpers;
+using System.Data.Entity;
 
 namespace BudgetPlanner.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleHelper roleHelper = new RoleHelper();
 
         public AccountController()
         {
@@ -85,10 +89,80 @@ namespace BudgetPlanner.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var userId = User.Identity.GetUserId();
+            var user = db.Users.AsNoTracking().FirstOrDefault(i => i.Id == userId);
+            if (user.HouseholdId == null)
+            {
+                switch (result)
+                {
+                    case SignInStatus.Success:
+                        return RedirectToAction("Index", "Home");
+                    case SignInStatus.LockedOut:
+                        return View("Lockout");
+                    case SignInStatus.RequiresVerification:
+                        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    case SignInStatus.Failure:
+                    default:
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                        return View(model);
+                }
+            }
+            if (user.HouseholdId != null)
+            {
+                switch (result)
+                {
+                    case SignInStatus.Success:
+                        return RedirectToAction("Index", "Dashboard");
+                    case SignInStatus.LockedOut:
+                        return View("Lockout");
+                    case SignInStatus.RequiresVerification:
+                        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    case SignInStatus.Failure:
+                    default:
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                        return View(model);
+                }
+            }
+            return View(model);
+        }
+
+        //
+        // POST: /Account/Login
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> LoginJoin(LoginViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.AsNoTracking().FirstOrDefault(e => e.Email == model.Email);
+                var userId = user.Id;
+                foreach (var role in roleHelper.ListUserRoles(userId))
+                {
+                    roleHelper.RemoveUserFromRole(userId, role);
+                }
+                roleHelper.AddUserToRole(userId, "Member");
+                user.HouseholdId = model.HouseholdId;
+                var invite = db.Invitations.AsNoTracking().Where(i => i.Code == model.Code).FirstOrDefault();
+                invite.Accepted = true;
+
+                db.Entry(user).State = EntityState.Modified;
+                db.Entry(invite).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Dashboard");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -99,6 +173,29 @@ namespace BudgetPlanner.Controllers
                     return View(model);
             }
         }
+
+        //Post
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DemoLogin(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = db.Users.FirstOrDefault(i => i.UserName == "DemoUser@Mailinator.com");
+            model.Password = "Abc123!";
+            var result = await SignInManager.PasswordSignInAsync(user.Email, model.Password, model.RememberMe, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Index", "Dashboard");
+                default:
+                    return RedirectToAction("Index", "Home");
+            }
+        }
+
 
         //
         // GET: /Account/VerifyCode
@@ -148,6 +245,7 @@ namespace BudgetPlanner.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+
             return View();
         }
 
@@ -160,10 +258,26 @@ namespace BudgetPlanner.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, HouseholdId = model.HouseholdId};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    if (user.HouseholdId != null)
+                    {
+                        foreach (var role in roleHelper.ListUserRoles(user.Id))
+                        {
+                            roleHelper.RemoveUserFromRole(user.Id, role);
+                        }
+                        roleHelper.AddUserToRole(user.Id, "Member");
+                        var invite = db.Invitations.AsNoTracking().FirstOrDefault(i => i.Code == model.Code);
+                        invite.Accepted = true;
+                        db.Entry(invite).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    if (user.HouseholdId == null)
+                    {
+                        roleHelper.AddUserToRole(user.Id, "Guest");
+                    }
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -339,21 +453,41 @@ namespace BudgetPlanner.Controllers
 
             // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
-            switch (result)
+            var userId = User.Identity.GetUserId();
+            var user = db.Users.AsNoTracking().FirstOrDefault(i => i.Id == userId);
+            if (user.HouseholdId == null)
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
-                case SignInStatus.Failure:
-                default:
-                    // If the user does not have an account, then prompt the user to create an account
-                    ViewBag.ReturnUrl = returnUrl;
-                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                switch (result)
+                {
+                    case SignInStatus.Success:
+                        return RedirectToAction("Index", "Home");
+                    case SignInStatus.LockedOut:
+                        return View("Lockout");
+                    case SignInStatus.RequiresVerification:
+                        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl});
+                    case SignInStatus.Failure:
+                    default:
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                        return View();
+                }
             }
+            if (user.HouseholdId != null)
+            {
+                switch (result)
+                {
+                    case SignInStatus.Success:
+                        return RedirectToAction("Index", "Dashboard");
+                    case SignInStatus.LockedOut:
+                        return View("Lockout");
+                    case SignInStatus.RequiresVerification:
+                        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl});
+                    case SignInStatus.Failure:
+                    default:
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                        return View();
+                }
+            }
+            return View();
         }
 
         //
@@ -393,6 +527,7 @@ namespace BudgetPlanner.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
+
 
         //
         // POST: /Account/LogOff

@@ -1,0 +1,53 @@
+﻿@model BudgetPlanner.ViewModels.AddTransactionViewModel
+@using BudgetPlanner.Models
+@using Microsoft.AspNet.Identity
+
+<div>
+    @using (Html.BeginForm("Create", "Transactions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            @{
+                ApplicationDbContext db = new ApplicationDbContext();
+                var userId = User.Identity.GetUserId();
+                var user = db.Users.FirstOrDefault(i => i.Id == userId);
+            }
+        </div>
+        @Html.Hidden("HouseholdId", user.HouseholdId)
+
+        <div class="form-horizontal">
+            <h4>Add Transaction</h4>
+
+            <div class="row">
+                <div class="col-md-5 col-sm-offset-1">
+                    <h4>Account:</h4>
+                    @Html.DropDownList("Accounts", null, new { @class = "form-control" })
+                </div>
+                <div class="col-md-5">
+                    <h4>Amount:</h4>
+                    <input type="text" class="form-control" placeholder="Enter Amount" id="Amount" name="Amount" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5 col-sm-offset-1">
+                    <h4>Budget Catagory:</h4>
+                    @Html.DropDownList("BudgetItems", null, "Income", new { @class = "form-control" })
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-11 col-sm-offset-1">
+                    <h4>Memo:</h4>
+                    <input type="text" class="form-control" placeholder="Memo" id="Memo" name="Memo" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div>
+            <input type="submit" class="btn btn-primary btn-lg" value="Submit" />
+        </div>
+    }
+</div>
+
+
+

@@ -11,6 +11,7 @@ using BudgetPlanner.Models;
 namespace BudgetPlanner.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;

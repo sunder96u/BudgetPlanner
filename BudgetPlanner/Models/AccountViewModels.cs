@@ -13,6 +13,7 @@ namespace BudgetPlanner.Models
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+
     }
 
     public class ExternalLoginListViewModel
@@ -65,6 +66,9 @@ namespace BudgetPlanner.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        public string Code { get; set; }
+        public int? HouseholdId { get; set; }
     }
 
     public class RegisterViewModel
@@ -90,6 +94,8 @@ namespace BudgetPlanner.Models
         [Required]
         public string LastName { get; set; }
         
+        public string Code { get; set; }
+        public int? HouseholdId { get; set; }
     }
 
     public class ResetPasswordViewModel

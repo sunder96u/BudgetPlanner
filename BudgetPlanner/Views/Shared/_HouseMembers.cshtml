@@ -1,0 +1,41 @@
+﻿@model BudgetPlanner.ViewModels.HouseMembersViewModel
+@using BudgetPlanner.Helpers
+@using BudgetPlanner.Models
+@using Microsoft.AspNet.Identity
+
+
+<div class="well">
+    <h4>Household Information:</h4>
+    @if (User.IsInRole("Member") || User.IsInRole("HeadofHousehold"))
+    {
+
+        ApplicationDbContext db = new ApplicationDbContext();
+        RoleHelper roleHelper = new RoleHelper();
+
+        <h4>House Name: @Model.House</h4>
+        <br />
+
+        foreach (var user in Model.Members)
+        {
+            if (roleHelper.IsUserInRole(user.Id, "HeadofHousehold"))
+            {
+                <p><strong>Head of Household:</strong><br /></p>
+                <p>Name: @user.FirstName @user.LastName <br /> Email: @user.Email</p>
+            }
+
+        }
+        <hr />
+        <h5>Members</h5>
+        foreach (var user in Model.Members)
+        {
+            if (!roleHelper.IsUserInRole(user.Id, "HeadofHousehold"))
+            {
+                <p>Name: @user.FirstName @user.LastName <br />Email: @user.Email </p><br />
+            }
+        }
+    }
+    @if (User.IsInRole("Guest"))
+    {
+        <h4>You are not part of a HouseHold</h4>
+    }
+</div>

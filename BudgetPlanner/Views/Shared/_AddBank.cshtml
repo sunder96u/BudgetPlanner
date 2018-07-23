@@ -1,0 +1,59 @@
+﻿@using BudgetPlanner.Models
+@using Microsoft.AspNet.Identity
+
+
+
+<div>
+    @using (Html.BeginForm("Create", "Banks", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+    <div>
+        @{
+            ApplicationDbContext db = new ApplicationDbContext();
+            var userId = User.Identity.GetUserId();
+            var user = db.Users.FirstOrDefault(i => i.Id == userId);
+        }
+    </div>
+        @Html.Hidden("HouseholdId", user.HouseholdId)
+
+        <div class="form-horizontal">
+            <h4>Add Bank</h4>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="field">
+                <label for="Name">Bank Name:</label>
+                <input type="text" id="Name" name="Name" value="" placeholder="Bank Name" class="form-control" />
+                @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="Address">Address:</label>
+                <input type="text" id="Address" name="Address" value="" placeholder="Street Address" class="form-control" />
+                @Html.ValidationMessage("Address", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="City">City:</label>
+                <input type="text" id="City" name="City" value="" placeholder="City" class="form-control" />
+                @Html.ValidationMessage("City", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="State">State:</label>
+                <input type="text" id="State" name="State" value="" placeholder="State" class="form-control" />
+                @Html.ValidationMessage("State", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="Zip">Zip:</label>
+                <input type="text" id="Zip" name="Zip" value="" placeholder="Zip Code" class="form-control" />
+                @Html.ValidationMessage("Zip", "", new { @class = "text-danger" })
+            </div>
+            <div class="field">
+                <label for="Phone">Bank Phone Number:</label>
+                <input type="text" id="Phone" name="Phone" value="" placeholder="Bank Phone Number" class="form-control" />
+                @Html.ValidationMessage("Phone", "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div>
+            <input type="submit" class="btn btn-primary btn-lg" value="Submit" />
+        </div>
+    }
+</div>

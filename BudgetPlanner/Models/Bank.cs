@@ -14,6 +14,8 @@ namespace BudgetPlanner.Models
         public string State { get; set; }
         public string Zip { get; set; }
         public string Phone { get; set; }
+        public int HouseholdId { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
 
@@ -21,5 +23,7 @@ namespace BudgetPlanner.Models
         {
             Accounts = new HashSet<Account>();
         }
+
+        public virtual Household Household { get; set; }
     }
 }

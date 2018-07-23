@@ -9,13 +9,17 @@ using System.Web.Mvc;
 using BudgetPlanner.Helpers;
 using BudgetPlanner.Models;
 using Microsoft.AspNet.Identity;
+using BudgetPlanner.Action_Filters;
 
 namespace BudgetPlanner.Controllers
 {
+    [RequireHttps]
+    [CustomAuthorization]
     public class HouseholdsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private RoleHelper roleHelper = new RoleHelper();
+        private HouseHelper houseHelper = new HouseHelper();
 
         // GET: Households
         public ActionResult Index()
@@ -60,9 +64,6 @@ namespace BudgetPlanner.Controllers
             if (ModelState.IsValid)
             {
                 db.Households.Add(household);
-                db.SaveChanges();
-
-
                 var userId = User.Identity.GetUserId();
                 foreach (var role in roleHelper.ListUserRoles(userId))
                 {
@@ -77,6 +78,81 @@ namespace BudgetPlanner.Controllers
                 return RedirectToAction("Index");
             }
 
+            return View(household);
+        }
+
+        //Post: LeaveHousehold
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LeaveHouse([Bind(Include = "Id,Name,HouseholdId")] Household household, int MemberCount)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.Identity.GetUserId();
+                var user = db.Users.Find(userId);
+
+                foreach (var role in roleHelper.ListUserRoles(userId))
+                {
+                        roleHelper.RemoveUserFromRole(userId, role);
+                }
+                roleHelper.AddUserToRole(userId, "Guest");
+                user.HouseholdId = null;
+                
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(household);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LeavehouseandDelete([Bind(Include = "Id,Name,HouseholdId")] Household household, int MemberCount)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.Identity.GetUserId();
+                var user = db.Users.Find(userId);
+
+                foreach (var role in roleHelper.ListUserRoles(userId))
+                {
+                    roleHelper.RemoveUserFromRole(userId, role);
+                }
+                roleHelper.AddUserToRole(userId, "Guest");
+                user.HouseholdId = null;
+                household.IsDeleted = true;
+
+                db.Households.Attach(household);
+                db.Entry(household).Property(p => p.IsDeleted).IsModified = true;
+
+                //The field is not actually changing.. Will need to change before the save changes
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(household);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LeaveHouseHeadofHousehold([Bind(Include ="Id,Name,HouseholdId")] Household household, int MemberCount, string Members)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.Identity.GetUserId();
+                var user = db.Users.Find(userId);
+                var UsersinHouse = houseHelper.UsersInHouse(household.Id).ToList();
+
+                roleHelper.RemoveUserFromRole(userId, "HeadofHousehold");
+                roleHelper.RemoveUserFromRole(Members, "Member");
+                roleHelper.AddUserToRole(Members, "HeadofHousehold");
+                roleHelper.AddUserToRole(userId, "Guest");
+
+                user.HouseholdId = null;
+
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
             return View(household);
         }
 

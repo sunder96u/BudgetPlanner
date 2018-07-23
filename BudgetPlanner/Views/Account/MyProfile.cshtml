@@ -1,4 +1,6 @@
 ﻿@model BudgetPlanner.Models.ApplicationUser
+    @using BudgetPlanner.Models
+@using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "MyProfile";
@@ -66,7 +68,7 @@
                                 @Html.HiddenFor(model => model.Id)
                                 @Html.HiddenFor(model => model.Email)
                                 <fieldset>
-                                    @Html.ValidationSummary("", new { @class = "text-danger"})
+                                    @Html.ValidationSummary("", new { @class = "text-danger" })
                                     <div class="form-group">
                                         <label for="Email" class="col-md-4">Email</label>
                                         <div class="col-md-8">
@@ -78,7 +80,7 @@
                                         <label for="FirstName" class="col-md-4">First Name</label>
                                         <div class="col-md-8">
                                             <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" placeholder="@Model.FirstName">
-                                            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger"})
+                                            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
                                         </div> <!-- /controls -->
                                     </div> <!-- /control-group -->
                                     <div class="form-group">
@@ -103,6 +105,15 @@
                                         </div> <!-- /controls -->
                                     </div>
                                     <hr />
+
+                                    @{ 
+                                        ApplicationDbContext db = new ApplicationDbContext();
+                                        var userId = User.Identity.GetUserId();
+                                        var user = db.Users.FirstOrDefault(i => i.Id == userId);
+                                    }
+
+                                    @if (user.UserName != "DemoUser@Mailinator.com")
+                                    {
                                     <div class="form-group">
                                         @if (Model.PasswordHash != null)
                                         {
@@ -117,6 +128,7 @@
                                             </div>
                                         }
                                     </div>
+                                    }
                                     <div class="form-group">
                                         <div class="col-md-offset-4 col-md-8">
                                             <button type="submit" class="btn btn-primary">Save</button>
@@ -134,10 +146,6 @@
     </div> <!-- /span8 -->
 
     <div class="col-md-4">
-        <div class="well">
-            <h4>Household Information:</h4>
-            <p>This area will list the house hold name, </p>
-            <p> and then create a list of all users in the house hold with links to their profiles</p>
-        </div>
+@Html.Action("HouseMembers", "Home")
     </div> <!-- /span4 -->
 </div> <!-- /row -->
