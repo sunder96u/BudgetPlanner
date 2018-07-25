@@ -59,13 +59,18 @@ namespace BudgetPlanner.Controllers
                 transaction.Created = DateTime.Now;
                 transaction.AccountId = Accounts;
                 var account = db.Accounts.AsNoTracking().FirstOrDefault(i => i.Id == Accounts);
+                var budgetItem = db.budgetItems.AsNoTracking().FirstOrDefault(i => i.Name == BudgetItems);
                 if(BudgetItems == "")
                 {
                     account.CurrentBalance = account.CurrentBalance + transaction.Amount;
+                    transaction.Type = "Income";
                 }
                 if(BudgetItems != "")
                 {
                     account.CurrentBalance = account.CurrentBalance - transaction.Amount;
+                    budgetItem.CurrentSpending = budgetItem.CurrentSpending + transaction.Amount;
+                    transaction.Type = BudgetItems;
+                    db.Entry(budgetItem).State = EntityState.Modified;
                 }
 
                 db.Transactions.Add(transaction);
@@ -85,19 +90,28 @@ namespace BudgetPlanner.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,AccountId,Amount,Memo,Updated,Reconciled")] Transaction transaction, int Accounts, string BudgetItems)
         {
+            var oldTransaction = db.Transactions.AsNoTracking().FirstOrDefault(i => i.Id == transaction.Id);
+
             if (ModelState.IsValid)
             {
                 var transactions = db.Transactions.AsNoTracking().FirstOrDefault(i => i.Id == transaction.Id);
                 transactions.Updated = DateTime.Now;
                 transactions.AccountId = Accounts;
+                transactions.Amount = transaction.Amount;
+                transactions.Memo = transaction.Memo;
                 var account = db.Accounts.AsNoTracking().FirstOrDefault(i => i.Id == Accounts);
+                var budgetItem = db.budgetItems.AsNoTracking().FirstOrDefault(i => i.Name == BudgetItems);
                 if (BudgetItems == "")
                 {
-                    account.CurrentBalance = account.CurrentBalance + transaction.Amount;
+                    account.CurrentBalance = account.CurrentBalance - oldTransaction.Amount + transaction.Amount;
+                    transactions.Type = "Income";
                 }
                 if (BudgetItems != "")
                 {
-                    account.CurrentBalance = account.CurrentBalance - transaction.Amount;
+                    account.CurrentBalance = account.CurrentBalance - transaction.Amount + oldTransaction.Amount;
+                    budgetItem.CurrentSpending = budgetItem.CurrentSpending - oldTransaction.Amount + transaction.Amount;
+                    transactions.Type = BudgetItems;
+                    db.Entry(budgetItem).State = EntityState.Modified;
                 }
 
                 db.Entry(transactions).State = EntityState.Modified;

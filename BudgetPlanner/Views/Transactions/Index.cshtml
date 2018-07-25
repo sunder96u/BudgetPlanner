@@ -89,7 +89,7 @@
                                             @Html.DisplayFor(modelItem => item.Created)
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-danger identityclass" data-target="#Edit" data-toggle="modal" data-id="@item.Id">Reconcile</button>
+                                            <button type="button" class="btn btn-danger identityclass" data-target="#Edit" data-toggle="modal" data-id="@item.Id" data-amount="@item.Amount" data-memo="@item.Memo">Reconcile</button>
                                         </td>
                                     </tr>
                                 }
@@ -122,11 +122,15 @@
 @section scripts
 {
     <script>
-    $(function () {
-        $(".identityclass").click(function () {
-            var idVal = $(this).data('id');
-            $(".modal-body #hiddenValue").val(idVal);
-        })
-    });
+        $(function () {
+            $(".identityclass").click(function () {
+                var idVal = $(this).data('id');
+                $(".modal-body #hiddenValue").val(idVal);
+                var amountVal = $(this).data('amount');
+                $(".modal-body #Amount").val(amountVal);
+                var memoVal = $(this).data('memo');
+                $(".modal-body #Memo").val(memoVal);
+            })
+        });
     </script>
 }

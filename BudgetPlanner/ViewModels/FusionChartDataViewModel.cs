@@ -18,7 +18,7 @@ namespace BudgetPlanner.ViewModels
 
     public class FusionChartData
     {
-        public string Label { get; set; }
-        public string Value { get; set; }
+        public string label { get; set; }
+        public string value { get; set; }
     }
 }

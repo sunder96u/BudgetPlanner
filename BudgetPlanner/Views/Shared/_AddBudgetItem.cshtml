@@ -8,21 +8,21 @@
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal">
-            <h4>Add Budget Catagory</h4>
+            <h4>Add Budget Category</h4>
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="field">
-                <label for="Name">Budget Name:</label>
+                <label for="Name">Category Name:</label>
                 <input type="text" id="Name" name="Name" value="" placeholder="Budget Name" class="form-control" />
                 @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
             </div>
             <div class="field">
-                <label for="Description">Budget Description:</label>
+                <label for="Description">Category Description:</label>
                 <input type="text" id="Description" name="Description" value="" placeholder="Budget Description" class="form-control" />
                 @Html.ValidationMessage("Description", "", new { @class = "text-danger" })
             </div>
             <div class="field">
-                <label for="SpendingTarget">Budget Spending Target:</label>
+                <label for="SpendingTarget">Category Spending Target:</label>
                 <input type="text" id="SpendingTarget" name="SpendingTarget" value="" placeholder="Your Spending Target" class="form-control" />
                 @Html.ValidationMessage("SpendingTarget", "", new { @class = "text-danger" })
             </div>

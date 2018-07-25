@@ -92,13 +92,27 @@ namespace BudgetPlanner.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,BudgetId,Name,Description")] BudgetItem budgetItem)
+        public ActionResult Edit([Bind(Include = "Id,BudgetId,Name,Description,SpendingTarget")] BudgetItem budgetItem, string Name)
         {
+            var oldBudgetItem = db.budgetItems.AsNoTracking().FirstOrDefault(i => i.Id == budgetItem.Id);
+
             if (ModelState.IsValid)
             {
-                db.Entry(budgetItem).State = EntityState.Modified;
+                var userId = User.Identity.GetUserId();
+                var user = db.Users.AsNoTracking().FirstOrDefault(i => i.Id == userId);
+                var category = db.budgetItems.AsNoTracking().FirstOrDefault(i => i.Id == budgetItem.Id);
+                category.Name = budgetItem.Name;
+                category.CurrentSpending = budgetItem.CurrentSpending;
+                category.Description = budgetItem.Description;
+                category.SpendingTarget = budgetItem.SpendingTarget;
+                category.Budget = db.Budgets.AsNoTracking().FirstOrDefault(i => i.HouseholdId == user.HouseholdId);
+                category.Id = budgetItem.Id;
+                var budget = category.Budget;
+                budget.SpendingTarget = budget.SpendingTarget - oldBudgetItem.SpendingTarget + category.SpendingTarget;
+                db.Entry(budget).State = EntityState.Modified;
+                db.Entry(category).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","BudgetViewModel");
             }
             ViewBag.BudgetId = new SelectList(db.Budgets, "Id", "Name", budgetItem.BudgetId);
             return View(budgetItem);

@@ -54,11 +54,36 @@ namespace BudgetPlanner.Controllers
             {
                 chartVm.Data.Add(new FusionChartData
                 {
-                    Label = entry.Name,
-                    Value = db.budgetItems.Count().ToString()
+                    label = entry.Name,
+                    value = entry.SpendingTarget.ToString()
                 });
             }
             return Content(JsonConvert.SerializeObject(chartVm), "application/json");
+
+        }
+
+        public ActionResult BudgetItemData()
+        {
+            var userId = User.Identity.GetUserId();
+            var user = db.Users.FirstOrDefault(i => i.Id == userId);
+            var chartVM = new BudgetItemsMorrisChart();
+            var Budget = new List<BudgetItem>();
+            var Catagory = db.budgetItems.Where(i => i.Budget.HouseholdId == user.HouseholdId);
+            foreach (var item in Catagory)
+            {
+                Budget.Add(item);
+            }
+
+            foreach (var entry in Budget)
+            {
+                chartVM.Data.Add(new MorrisChartData
+                {
+                    BudgetItem = entry.Name,
+                    CurrentBalance = entry.CurrentSpending.ToString(),
+                    TargetBalance = entry.SpendingTarget.ToString()
+                });
+            }
+            return Content(JsonConvert.SerializeObject(chartVM), "application/json");
 
         }
     }

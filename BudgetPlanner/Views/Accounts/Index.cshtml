@@ -34,11 +34,11 @@
                         <i class="icon-th-large"></i>
                         <h3>Your House Accounts</h3>
                     </div> <!-- /widget-header -->
-                
+
                     <div class="widget-content">
-                    @{ ApplicationDbContext db = new ApplicationDbContext();
-                        var userId = User.Identity.GetUserId();
-                        var user = db.Users.FirstOrDefault(i => i.Id == userId); }
+                        @{ ApplicationDbContext db = new ApplicationDbContext();
+                            var userId = User.Identity.GetUserId();
+                            var user = db.Users.FirstOrDefault(i => i.Id == userId); }
                         @foreach (var account in Model.Where(i => i.Bank.HouseholdId == user.HouseholdId))
                         {
                             <div class="pricing-plans plans-4">
@@ -78,12 +78,13 @@
                                                     <strong>Account Number:</strong>&nbsp;
                                                     <button class="ui-popover" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="@account.AccountNumber" title="" data-original-title="Your Account Number:" style="border:none;color:blue;background-color:rgba(0,0,0,0);">Hidden For Your Safety</button>
                                                 </li>
+
                                             </ul>
                                         </div> <!-- /plan-features -->
                                         <div class="plan-actions">
                                             <a href="@Url.Action("Details","Accounts",new { id = account.Id },null)" class="btn btn-default">Transactions</a>
-                                            <a class="btn btn-warning identityclass" data-target="#Edit" data-toggle="modal" data-id="@account.Id">Edit</a>
-                                            <a class="btn btn-danger identityclass" data-target="#Delete" data-toggle="modal" data-id="@account.Id">Delete</a>
+                                            <a class="btn btn-warning identityclass" data-target="#Edit" data-toggle="modal" data-id="@account.Id" data-name="@account.Name" data-description="@account.Description" data-anumber="@account.AccountNumber" data-rnumber="@account.RoutingNumber">Edit</a>
+                                            <a class="btn btn-danger identityclass1" data-target="#Delete" data-toggle="modal" data-id="@account.Id">Delete</a>
                                         </div> <!-- /plan-actions -->
                                     </div> <!-- /plan -->
                                 </div> <!-- /plan-container -->
@@ -169,7 +170,22 @@
             $(".identityclass").click(function () {
                 var idVal = $(this).data('id');
                 $(".modal-body #hiddenValue").val(idVal);
-            })
+                var nameVal = $(this).data('name');
+                $(".modal-body #Name").val(nameVal);
+                var descVal = $(this).data('description');
+                $(".modal-body #Description").val('descVal');
+                var anumVal = $(this).data('anumber');
+                $(".modal-body #AccountNumber").val(anumVal);
+                var rnumVal = $(this).data('rnumber');
+                $(".modal-body #RoutingNumber").val(rnumVal);
+            });
+        });
+
+        $(function () {
+            $(".identityclass1").click(function () {
+                var idVal = $(this).data('id');
+                $(".modal-body #hiddenValue").val(idVal);
+            });
         });
     </script>
 }

@@ -18,8 +18,7 @@
 }
 @if (Model.Name != "foo")
 {
-    <button type="button" class="btn btn-lg btn-success" data-toggle="modal" data-target="#AddBudgetItem">Add Budget Catagory</button>
-    <button type="button" class="btn btn-lg btn-warning pull-right" data-toggle="modal" data-target="#EditBudget">Edit Budget</button>
+    <button type="button" class="btn btn-lg btn-success" data-toggle="modal" data-target="#AddBudgetItem">Add Budget Category</button>
 }
 <br />
 <br />
@@ -86,8 +85,8 @@
 
                                     </div> <!-- /plan-actions -->
                                     <div class="plan-actions">
-                                            <a class="btn btn-warning identityclass" data-target="#Edit" data-toggle="modal" data-id="@catagory.Id">Edit</a>
-                                            <a class="btn btn-danger identityclass" data-target="#Delete" data-toggle="modal" data-id="@catagory.Id">Delete</a>
+                                            <a class="btn btn-warning identityclass" data-target="#Edit" data-toggle="modal" data-id="@catagory.Id" data-name="@catagory.Name" data-description="@catagory.Description" data-spendingtarget="@catagory.SpendingTarget">Edit</a>
+                                            <a class="btn btn-danger identityclass1" data-target="#Delete" data-toggle="modal" data-id="@catagory.Id">Delete</a>
                                     </div> <!-- /plan-features -->
                                 </div> <!-- /plan -->
                             </div> <!-- /plan-container -->
@@ -166,23 +165,6 @@
         </div>
     </div>
 </div>
-<div id="EditBudget" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal Content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title" align="center">Edit Budget</h4>
-            </div>
-            <div class="modal-body">
-                @Html.Partial("_EditBudget")
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 @section scripts
 {
     <script>
@@ -190,8 +172,22 @@
         $(".identityclass").click(function () {
             var idVal = $(this).data('id');
             $(".modal-body #hiddenValue").val(idVal);
+            var name = $(this).data('name');
+            $(".modal-body #Name").val(name);
+            var description = $(this).data('description');
+            $(".modal-body #Description").val(description);
+            var spendingtarget = $(this).data('spendingtarget');
+            $(".modal-body #SpendingTarget").val(spendingtarget);
+
         })
-    });
+        });
+
+        $(function () {
+            $(".identityclass1").click(function () {
+                var idVal = $(this).data('id');
+                $(".modal-body #hiddenValue").val(idVal);
+            })
+        });
     </script>
 }
 

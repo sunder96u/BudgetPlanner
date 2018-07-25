@@ -15,7 +15,7 @@ namespace BudgetPlanner.Action_Filters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            var user = db.Users.FirstOrDefault(i => i.Id == userId);
+            var user = db.Users.Find(userId);
 
             if (userId == null || user.HouseholdId == null)
             {
@@ -32,7 +32,7 @@ namespace BudgetPlanner.Action_Filters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            var user = db.Users.FirstOrDefault(i => i.Id == userId);
+            var user = db.Users.Find(userId);
             var accountId = Convert.ToInt32(filterContext.ActionParameters.SingleOrDefault(p => p.Key == "Id").Value);
             var account = db.Accounts.Find(accountId);
 

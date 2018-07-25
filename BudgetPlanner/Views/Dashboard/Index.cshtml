@@ -10,15 +10,19 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <div id="CircleBudgetData">Budget Data will load here</div>
+            <div id="CircleBudgetData" style="height:400px;"></div>
         </div>
         <div class="col-md-6">
             @Html.Action("HouseMembers", "Home")
         </div>
     </div>
     <div class="row">
-        <div id="AllBudgetData">Budget Data will load here</div>
+        <div id="AllBudgetData" style="height:300px; width:auto;"></div>
     </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
     <div class="row">
         <div class="col-md-12">
             <div class="widget stacked">
@@ -87,7 +91,7 @@
                                             @Html.DisplayFor(modelItem => item.Created)
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-danger identityclass" data-target="#Edit" data-toggle="modal" data-id="@item.Id">Reconcile</button>
+                                            <button type="button" class="btn btn-danger identityclass" data-target="#Edit" data-toggle="modal" data-id="@item.Id" data-amount="@item.Amount" data-memo="@item.Memo">Reconcile</button>
                                         </td>
                                     </tr>
                                 }
@@ -125,38 +129,46 @@
         $(".identityclass").click(function () {
             var idVal = $(this).data('id');
             $(".modal-body #hiddenValue").val(idVal);
+            var amountVal = $(this).data('amount');
+            $(".modal-body #Amount").val(amountVal);
+            var memoVal = $(this).data('memo');
+            $(".modal-body #Memo").val(memoVal);
         })
     });
 
-    var url = '@Url.Action("BudgetData", "Dashboard")'
-    $.post(url).then(function (response) {
-        FusionCharts.ready(function () {
-            var revenueChart = new FusionCharts({
-                type: 'doughnut2d',
-                renderAt: 'CircleBudgetData',
-                width: '550',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": {
-                        "caption": "Budget",
-                        "subCaption": "by Catagory",
-                        "use3dLighting": "1",
-                        "enableSmartLabels": "1",
-                        "startingAngle": "180",
-                        "showLabels": "1",
-                        "showLegend": "1",
-                        "centerLabelBold": "1",
-                        "showToolTip": "1",
-                        "useDataPlotColorForLabels": "1",
-                        "theme": "fint"
-                    },
-                    "data": response.data
-                }
-            });
-            revenueChart.render();
-        });
-    });
+    </script>
+    <script>
 
+        $.get('@Url.Action("BudgetData", "Dashboard")', function (result) {
+            new Morris.Donut({
+                element: "CircleBudgetData",
+                data: result.Data,
+                colors: ['#922B21', '#AF601A', '#8E44AD', '#F7DC6F', '#17202A', '#7FB3D5', '#4A235A'],
+                formatter: function (y, data) { return '$' + y },
+                resize: true
+            });
+
+        });
+      
+    </script>
+    <script>
+        $.get('@Url.Action("BudgetItemData", "Dashboard")', function (result) {
+            new Morris.Bar({
+                element: "AllBudgetData",
+                data: result.Data,
+                xkey: 'BudgetItem',
+                ykeys: ['CurrentBalance', 'TargetBalance'],
+                labels: ['Current Spending', 'Spending Target'],
+                barColors: function (row, series, type) {
+                    if (series.key == 'CurrentBalance') {
+                            return "green";
+                    }
+                    else {
+                        return "orange";
+                    }
+                },
+                resize: true
+            });
+        });
     </script>
 }
