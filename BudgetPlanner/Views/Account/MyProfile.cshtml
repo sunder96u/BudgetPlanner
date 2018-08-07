@@ -100,7 +100,7 @@
                                     <div class="form-group">
                                         <label class="col-md-4" for="PhoneNumber">Phone Number</label>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" placeholder="@Model.PhoneNumber">
+                                            <input type="number" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" placeholder="@Model.PhoneNumber">
                                             @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger"})
                                             <p class="help-block">Your Phone Number is used for 2 Factor Authenitification, if you choose to use it.</p>
                                         </div> <!-- /controls -->

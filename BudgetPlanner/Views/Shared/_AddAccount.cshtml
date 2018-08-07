@@ -43,12 +43,12 @@
             </div>
             <div class="field">
                 <label for="AccountNumber">Account Number:</label>
-                <input type="text" id="AccountNumber" name="AccountNumber" value="" placeholder="Account Number" class="form-control" />
+                <input type="number" id="AccountNumber" name="AccountNumber" value="" placeholder="Account Number" class="form-control" />
                 @Html.ValidationMessage("AccountNumber", "", new { @class = "text-danger" })
             </div>
             <div class="field">
                 <label for="RoutingNumber">Routing Number:</label>
-                <input type="text" id="RoutingNumber" name="RoutingNumber" value="" placeholder="Account Routing Number" class="form-control" />
+                <input type="number" id="RoutingNumber" name="RoutingNumber" value="" placeholder="Account Routing Number" class="form-control" />
                 @Html.ValidationMessage("RoutingNumber", "", new { @class = "text-danger" })
             </div>
             <div class="field">

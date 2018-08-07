@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FinancialApp.Pages.AccountsPage"
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False">
+
+    <!-- main page grid -->
+    <Grid RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+
+        <!-- Row Background Colors-->
+        <BoxView Grid.Row="0" Color="Gold" />
+        <BoxView Grid.Row="1" Color="Black" />
+        <BoxView Grid.Row="2" Color="Gold" />
+
+        <!-- Title -->
+        <Grid Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="1" Grid.ColumnSpan="2" FontSize="Large" HorizontalOptions="Center" Text="Financial Planner" TextColor="Black" VerticalOptions="Center"/>
+
+            <Label Grid.Row="2" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" Text="Bank Name:" TextColor="Black" VerticalOptions="End" />
+            <Label Grid.Row="2" Grid.Column="1" FontSize="Small" HorizontalOptions="Center" Text="This will be Bank name!!" TextColor="Black" VerticalOptions="End"/>
+
+        </Grid>
+
+
+        <!-- Inner Grid for Button Layouts -->
+        <Grid Grid.Row="1" ColumnSpacing="10" HorizontalOptions="Center" RowSpacing="10" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollView Grid.Row="1" Grid.Column="1" BackgroundColor="White">
+                <ListView x:Name="Accounts" ItemsSource="{Binding Accounts}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnSpacing="5" RowSpacing="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Text="Created:" TextColor="Black"/>
+                                <Label Grid.Row="0" Grid.Column="1" Text="Amount" TextColor="Black"/>
+                                <Label Grid.Row="0" Grid.Column="2" Text="Description" TextColor="Black"/>
+                                <Label Grid.Row="0" Grid.Column="3" Text="Memo" TextColor="Black"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollView>
+
+        </Grid>
+
+        <!-- Footer -->
+        <Grid Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center" Padding="5,5,5,5">
+            <Button x:Name="homeBtn"  Text="Home" WidthRequest="100" BorderWidth="5" BorderColor="Black" TextColor="Black" BackgroundColor="Gold" BorderRadius="10"/>
+        </Grid>
+
+
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FinancialApp.Pages.LandingPage"
+             xmlns:controls="clr-namespace:FinancialApp.Pages"
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False">
+
+    <!-- main page grid -->
+    <Grid RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        
+        <!-- Row Background Colors-->
+        <BoxView Grid.Row="0" Color="Gold" />
+        <BoxView Grid.Row="1" Color="Black" />
+        <BoxView Grid.Row="2" Color="Gold" />
+        
+        <!-- Title -->
+        <Grid Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="1" Grid.ColumnSpan="2" FontSize="Large" HorizontalOptions="Center" Text="Financial Planner" TextColor="Black" VerticalOptions="Center"/>
+
+            <Label Grid.Row="2" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" Text="House Name:" TextColor="Black" VerticalOptions="End" />
+            <Label Grid.Row="2" Grid.Column="1" FontSize="Small" HorizontalOptions="Center" Text="{Binding Name}" TextColor="Black" VerticalOptions="End"/>
+
+        </Grid>
+
+
+        <!-- Inner Grid for Button Layouts -->
+        <Grid Grid.Row="1" ColumnSpacing="50" HorizontalOptions="Center" RowSpacing="10" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+
+            <controls:LayOutButton Grid.Row="1" Grid.Column="1" Icon="AccountsCircle.png" Label="Accounts">
+                <controls:LayOutButton.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="AccountsButtonTapped"/>
+                </controls:LayOutButton.GestureRecognizers>
+            </controls:LayOutButton>
+            <controls:LayOutButton Grid.Row="1" Grid.Column="2" Icon="BankCircle3.png" Label="Banks">
+                <controls:LayOutButton.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="BanksButtonTapped"/>
+                </controls:LayOutButton.GestureRecognizers>
+            </controls:LayOutButton>
+            <controls:LayOutButton Grid.Row="2" Grid.Column="1" Icon="BudgetCircle.png" Label="Budget">
+                <controls:LayOutButton.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="BudgetButtonTapped"/>
+                </controls:LayOutButton.GestureRecognizers>
+            </controls:LayOutButton>
+            <controls:LayOutButton Grid.Row="2" Grid.Column="2" Icon="TransactionsCircle.png" Label="Transactions">
+                <controls:LayOutButton.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TransactionsButtonTapped"/>
+                </controls:LayOutButton.GestureRecognizers>
+            </controls:LayOutButton>
+
+        </Grid>
+        
+        <!-- Footer -->
+        <Grid Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
+            <Label FontSize="Micro" HorizontalOptions="Center" Text="Created By: Steven Underwood" TextColor="Black" VerticalOptions="Center"/>
+        </Grid>
+
+
+    </Grid>
+    
+</ContentPage>

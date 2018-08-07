@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FinancialApp.Pages.TransactionPageInfo"
+             NavigationPage.HasBackButton="False"
+             NavigationPage.HasNavigationBar="False">
+
+    <!-- Create Grid -->
+    <Grid RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+
+        <!--Row Background Colors -->
+        <BoxView Grid.Row="0" Color="Gold" />
+        <BoxView Grid.Row="1" Color="Black" />
+        <BoxView Grid.Row="2" Color="Gold" />
+
+        <!-- Title -->
+        <Grid Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <Label FontSize="Large" HorizontalOptions="Center" Text="Financial Planner" TextColor="Black" VerticalOptions="Center" />
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnSpacing="5" HorizontalOptions="Center" RowSpacing="50" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Label Grid.Row="2" Grid.Column="1" TextColor="Gold" Text="Account Id:"/>
+            <Entry x:Name="accountEntry" Grid.Row="2" Grid.Column="2" WidthRequest="200"/>
+            <Button x:Name="getTransactionBtn" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"  Text="Enter" WidthRequest="300" BorderWidth="5" BorderColor="Gold" TextColor="Gold" BorderRadius="25"/>
+
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
+            <Button x:Name="homeBtn"  Text="Home" WidthRequest="100" BorderWidth="5" BorderColor="Black" TextColor="Black" BackgroundColor="Gold" BorderRadius="10"/>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
