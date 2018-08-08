@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FinancialApp.Classes;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +23,14 @@ namespace FinancialApp.Pages
 
         public async void GetTransactionBtn_Clicked(object sender, EventArgs args)
         {
-            await Navigation.PushAsync(new TransactionsPage());
+            if (!string.IsNullOrEmpty(accountEntry.Text))
+                {
+                var transaction = await Core.GetTransactions(accountEntry.Text);
+                var page = new TransactionsPage();
+                page.BindingContext = transaction;
+                await Navigation.PushAsync(page);
+                Debug.WriteLine(transaction);
+            }
         }
 
         public async void HomeBtn_Clicked(object sender, EventArgs e)

@@ -58,7 +58,7 @@
                     <TapGestureRecognizer Tapped="AccountsButtonTapped"/>
                 </controls:LayOutButton.GestureRecognizers>
             </controls:LayOutButton>
-            <controls:LayOutButton Grid.Row="1" Grid.Column="2" Icon="BankCircle3.png" Label="Banks">
+            <controls:LayOutButton Grid.Row="1" Grid.Column="2" Icon="BankCircle3.png" Label="Banks" Id="{Binding Id}">
                 <controls:LayOutButton.GestureRecognizers>
                     <TapGestureRecognizer Tapped="BanksButtonTapped"/>
                 </controls:LayOutButton.GestureRecognizers>

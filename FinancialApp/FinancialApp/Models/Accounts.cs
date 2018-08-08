@@ -6,7 +6,9 @@ namespace FinancialApp.Models
 {
     class Accounts
     {
+        public string BankId { get; set; }
         public string Name { get; set; }
+        public string BankName { get; set; }
         public string Description { get; set; }
         public string CurrentBalance { get; set; }
         public string AccountTypeId { get; set; }
@@ -16,6 +18,7 @@ namespace FinancialApp.Models
         public Accounts()
         {
             Name = "";
+            BankName = "";
             Description = "";
             CurrentBalance = "";
             AccountTypeId = "";

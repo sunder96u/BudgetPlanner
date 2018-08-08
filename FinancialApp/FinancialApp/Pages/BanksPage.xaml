@@ -33,8 +33,8 @@
             <Label Grid.Row="1" Grid.ColumnSpan="2" FontSize="Large" HorizontalOptions="Center" Text="Financial Planner" TextColor="Black" VerticalOptions="Center"/>
 
             <Label Grid.Row="2" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" Text="House Name:" TextColor="Black" VerticalOptions="End" />
-            <Label Grid.Row="2" Grid.Column="1" FontSize="Small" HorizontalOptions="Center" Text="This will be House name!!" TextColor="Black" VerticalOptions="End"/>
-
+            <Label Grid.Row="2" Grid.Column="1" FontSize="Small" HorizontalOptions="Center" Text="{Binding Account.BankName}" TextColor="Black" VerticalOptions="End"/>
+            
         </Grid>
 
 
@@ -52,26 +52,10 @@
             </Grid.ColumnDefinitions>
 
             <ScrollView Grid.Row="1" Grid.Column="1" BackgroundColor="White">
-                <ListView x:Name="Banks" ItemsSource="{Binding Banks}">
+                <ListView x:Name="BanksView" ItemsSource="{Binding Banks}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnSpacing="5" RowSpacing="5">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="30"/>
-                                    <RowDefinition Height="30"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Label Grid.Row="0" Grid.Column="0" Text="Created:" TextColor="Black"/>
-                                <Label Grid.Row="0" Grid.Column="1" Text="Amount" TextColor="Black"/>
-                                <Label Grid.Row="0" Grid.Column="2" Text="Description" TextColor="Black"/>
-                                <Label Grid.Row="0" Grid.Column="3" Text="Memo" TextColor="Black"/>
-                            </Grid>
+                            <TextCell Text="{Binding Name}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

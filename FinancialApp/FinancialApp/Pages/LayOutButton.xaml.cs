@@ -29,5 +29,11 @@ namespace FinancialApp.Pages
             set { LayoutLabel.Text = value; }
         }
 
+        public string Data
+        {
+            get { return LayoutId.Text; }
+            set { LayoutId.Text = value; }
+        }
+
 	}
 }

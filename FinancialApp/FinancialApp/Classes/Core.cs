@@ -12,9 +12,10 @@ namespace FinancialApp.Classes
     {
         public static async Task<HouseHold> GetLandingPage(string HouseholdId)
         {
-            string queryString = string.Format("http://sunderwoodbudgetplannerapi.azurewebsites.net:80/API/Household/Json?householdId={0}", HouseholdId);
+            string queryString = string.Format("http://sunderwoodbudgetplannerapi.azurewebsites.net:80/API/Household?householdId={0}", HouseholdId);
 
             string json = await DataService.getDataFromService(queryString).ConfigureAwait(false);
+
             if (json != null)
             {
                 return JsonConvert.DeserializeObject<HouseHold>(json);
@@ -24,41 +25,17 @@ namespace FinancialApp.Classes
                 return null;
             }
 
-
-          
-            //dynamic results = await DataService.getDataFromService(queryString).ConfigureAwait(false);
-            //if (results["household"] != null)
-            //{
-            //    Debug.WriteLine("Yay there is a results[Household...]");
-
-            //    var household = new HouseHold();
-            //    household.Name = (string)results["Name"];
-            //    household.Description = (string)results["Description"];
-            //    return household;
-            //}
-            //else
-            //{
-            //    return null;
-            //}
         }
 
         public static async Task<AccountDetails> GetAccountDetails(string AccountId)
         {
-            string queryString = string.Format("http://sunderwoodbudgetplannerapi.azurewebsites.net:80/API/Account/Json?accountId={0}", AccountId);
+            string queryString = string.Format("http://sunderwoodbudgetplannerapi.azurewebsites.net:80/API/Account?accountId={0}", AccountId);
 
-            dynamic results = await DataService.getDataFromService(queryString).ConfigureAwait(false);
+            dynamic json = await DataService.getDataFromService(queryString).ConfigureAwait(false);
 
-            if (results["accountDetails"] != null)
+            if (json != null)
             {
-                var accountDetails = new AccountDetails();
-                accountDetails.Name = (string)results["Name"];
-                accountDetails.Description = (string)results["Description"];
-                accountDetails.Created = (string)results["Created"];
-                accountDetails.CurrentBalance = "$" + (string)results["CurrentBalance"];
-                accountDetails.AccountTypeId = (string)results["AccountTypeId"];
-                accountDetails.AccountNumber = (string)results["AccountNumber"];
-                accountDetails.RoutingNumber = (string)results["RoutingNumber"];
-                return accountDetails;
+                return JsonConvert.DeserializeObject<AccountDetails>(json);
             }
             else
             {
@@ -100,18 +77,13 @@ namespace FinancialApp.Classes
 
         public static async Task<Budget> GetBudget (string HouseholdId)
         {
-            string queryString = string.Format("http://sunderwoodbudgetplannerapi.azurewebsites.net:80/API/Budget/Json?householdId={0}", HouseholdId);
+            string queryString = string.Format("http://sunderwoodbudgetplannerapi.azurewebsites.net:80/API/Budget?householdId={0}", HouseholdId);
 
-            dynamic results = await DataService.getDataFromService(queryString).ConfigureAwait(false);
+            dynamic json = await DataService.getDataFromService(queryString).ConfigureAwait(false);
 
-            if (results["budget"] != null)
+            if (json != null)
             {
-                var budget = new Budget();
-                budget.Name = (string)results["Name"];
-                budget.Description = (string)results["Description"];
-                budget.SpendingTarget = "$" + (string)results["SpendingTarget"];
-                budget.CurrentBalance = "$" + (string)results["CurrentBalance"];
-                return budget;
+                return JsonConvert.DeserializeObject<Budget>(json);
             }
             else
             {
@@ -139,21 +111,17 @@ namespace FinancialApp.Classes
         {
             string queryString = string.Format("http://sunderwoodbudgetplannerapi.azurewebsites.net:80/API/Transaction/Json?transactionId={0}", TransactionId);
 
-            dynamic results = await DataService.getDataFromService(queryString).ConfigureAwait(false);
+            dynamic json = await DataService.getDataFromService(queryString).ConfigureAwait(false);
 
-            if (results["transactionDetails"] != null)
+            if (json != null)
             {
-                var transactionDetails = new TransactionDetails();
-                transactionDetails.Amount = "$" + (string)results["Amount"];
-                transactionDetails.Type = (string)results["Type"];
-                transactionDetails.Memo = (string)results["Memo"];
-                transactionDetails.Created = (string)results["Created"];
-                return transactionDetails;
+                return JsonConvert.DeserializeObject<TransactionDetails>(json);
             }
             else
             {
                 return null;
             }
+
         }
 
     }

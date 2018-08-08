@@ -12,6 +12,7 @@ namespace FinancialApp.Classes
     {
         public static async Task<dynamic> getDataFromService(string queryString)
         {
+            Debug.WriteLine("In DataService.cs");
             var client = new HttpClient();
             string json = "";
 

@@ -30,7 +30,8 @@ namespace FinancialApp.Pages
 
         public async void BanksButtonTapped (object sender, EventArgs args)
         {
-            await Navigation.PushAsync(new BanksPage());
+
+            await Navigation.PushAsync(new BanksPage(2.ToString()));
         }
 
         public async void BudgetButtonTapped (object sender, EventArgs args)
